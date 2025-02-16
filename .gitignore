@@ -2,3 +2,4 @@ venv
 backend/build/
 backend/dist/
 backend/homeharbor.egg-info/
+.idea/
