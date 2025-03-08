@@ -1,5 +1,18 @@
-venv
+# 🔥 Node.js (Frontend & Electron)
+node_modules/
+frontend/node_modules/
+electron/node_modules/
+
+# 🐍 Python (Backend)
+venv/
 backend/build/
 backend/dist/
 backend/homeharbor.egg-info/
+__pycache__/
+
+# ⚡ Vite (Frontend)
+frontend/dist/
+
+# 🖥️ IDE & Log files
 .idea/
+*.log
