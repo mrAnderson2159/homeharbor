@@ -1,0 +1,13 @@
+{
+    "name": "homeharbor",
+    "version": "1.0.0",
+    "main": "electron/main.js",
+    "scripts": {
+        "start": "electron .",
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "electron": "^35.0.0"
+    }
+}

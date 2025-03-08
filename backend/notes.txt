@@ -1,0 +1,2 @@
+Per caricare il venv eseguire
+source venv/bin/activate

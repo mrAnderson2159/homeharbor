@@ -1,9 +1,22 @@
 .
 ├── README.md
 ├── backend
-│   └── requirements.txt
+│   ├── requirements.txt
+│   └── scanner
+│       ├── __init__.py
+│       ├── scanner_control
+│       │   ├── __init__.py
+│       │   ├── applescript.py
+│       │   ├── automation.py
+│       │   ├── main.py
+│       │   └── vision.py
+│       ├── setup.py
+│       └── test
+│           └── scan_test.py
 ├── database
+├── electron
 ├── frontend
+├── setup.sh
 └── tree.txt
 
-4 directories, 3 files
+8 directories, 12 files
