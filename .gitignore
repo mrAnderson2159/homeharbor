@@ -37,6 +37,10 @@ database/pg_stat/
 database/pg_temp/
 database/pg_statistic/
 database/pg_statistic_ext/
+database/postgresapp_config.plist
+database/postgresql.auto.conf
+database/postgresql.conf
+
 
 # ⚡ Vite (Frontend)
 frontend/dist/
