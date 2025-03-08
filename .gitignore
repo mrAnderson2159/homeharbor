@@ -10,6 +10,34 @@ backend/dist/
 backend/homeharbor.egg-info/
 __pycache__/
 
+# 🗄️ Database (PostgreSQL)
+database/*.log
+database/*.pid
+database/*.backup
+database/*.data
+database/pg_*
+database/postmaster*
+database/base/
+database/global/
+database/pg_xact/
+database/pg_multixact/
+database/pg_subtrans/
+database/pg_twophase/
+database/pg_notify/
+database/pg_stat_tmp/
+database/pg_replslot/
+database/pg_tblspc/
+database/pg_wal/
+database/pg_snapshots/
+database/pg_commit_ts/
+database/pg_dynshmem/
+database/pg_logical/
+database/pg_serial/
+database/pg_stat/
+database/pg_temp/
+database/pg_statistic/
+database/pg_statistic_ext/
+
 # ⚡ Vite (Frontend)
 frontend/dist/
 
