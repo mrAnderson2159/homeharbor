@@ -1,3 +1,4 @@
+# backend/app/scansione_documenti/models.py
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, CheckConstraint
 from sqlalchemy.orm import relationship
 from app.database import Base
