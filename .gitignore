@@ -48,3 +48,6 @@ frontend/dist/
 # 🖥️ IDE & Log files
 .idea/
 *.log
+
+# !important
+backend/_amministrazione

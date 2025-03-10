@@ -1,11 +1,9 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
+from sqlalchemy import engine_from_config, pool, MetaData
 from alembic import context
 
-from app.database import Base  # Importa la Base di SQLAlchemy
+from app.scansione_documenti import models as sd_models # Importa i modelli di scansione_documenti
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -20,7 +18,14 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = Base.metadata
+target_metadata = [
+    sd_models.Base.metadata,
+    # inserisci i modelli di altri schemi qui
+]
+
+# print("Modelli importati correttamente:", dir(models))
+# print("Tabelle trovate da Alembic:", models.Base.metadata.tables.keys())
+
 
 
 # other values from the config, defined by the needs of env.py,
