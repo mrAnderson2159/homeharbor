@@ -4,3 +4,10 @@ $transition-fast: 0.2s ease;
 $transition-slow: 0.4s ease;
 $radius: 8px;
 $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+// Flex utility classes: flex-1 to flex-11
+@for $i from 1 through 11 {
+    .flex-#{$i} {
+        flex: #{$i};
+    }
+}
