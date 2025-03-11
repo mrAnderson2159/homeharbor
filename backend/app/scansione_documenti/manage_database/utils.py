@@ -22,37 +22,53 @@ def crud(function):
             keys = [key.strip() for key in filter_key.split(',')]
             filter_condition = {key: kwargs[key] for key in keys if key in kwargs}
 
-        print(f"🔍 Ricerca: {model.__name__} - {filter_condition}")
+        print(f"🔍 {model.__name__}: ricerca per {filter_condition}")
         instance = db.query(model).filter_by(**filter_condition).first()
-        print(f"istanza: {instance.__dict__ if instance else None}")
-        return function(instance, *args, **kwargs)
+
+        attrs = None
+
+        if instance:
+            attrs = {k: v for k, v in vars(instance).items() if not k.startswith('_')}
+            attrs = dict(sorted(attrs.items()))
+            print(f"\t✅ Trovato: {attrs}")
+        else:
+            print("\t➕ Nessuna corrispondenza trovata.")
+
+        return function(instance, *args, attrs=attrs, **kwargs)
 
     return wrapper
 
 
 @crud
-def get_or_create(instance, context_info=None, **kwargs):
+def get_or_create(instance, **kwargs):
     model = kwargs.pop('model')
+    kwargs.pop('attrs')
     kwargs.pop('filter_key')  # evita conflitti con model(**kwargs)
 
+    attrs = ', '.join(f"{k}={repr(v)}" for k, v in kwargs.items())
+
     if instance:
-        print(f"⚠️  Esiste già: {instance} - Context: {context_info}")
+        print()
         return instance
     else:
         instance = model(**kwargs)
         db.add(instance)
         db.flush()
-        db.refresh(instance)
-        print(f"✅ Creato: {instance} - Context: {context_info}")
+        print(f"\t\t✅ Creato: {model.__name__}({attrs})\n")
         return instance
 
 
 @crud
-def remove(instance, context_info=None, **kwargs):
+def remove(instance, **kwargs):
+    attrs = kwargs.pop('attrs')
+    model = kwargs.pop('model')
+
+    attrs = ', '.join(f"{k}={repr(v)}" for k, v in attrs.items())
+
     if instance:
         db.delete(instance)
         db.flush()
-        print(f"✅ Eliminato: {instance} - Context: {context_info}")
+        print(f"\t\t✅ Eliminato: {model.__name__}({attrs})\n")
         return instance
 
 

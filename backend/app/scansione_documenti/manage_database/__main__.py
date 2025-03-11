@@ -6,5 +6,5 @@
 from app.scansione_documenti.manage_database.core import db_init, sync_db
 
 if __name__ == '__main__':
-    db_init() # TODO: fix this
-    # sync_db() # TODO: fix this
+    db_init()
+    sync_db()

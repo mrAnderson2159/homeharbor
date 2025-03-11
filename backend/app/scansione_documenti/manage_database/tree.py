@@ -31,4 +31,4 @@ class DB_Tree:
         return {k: getattr(self, k) - getattr(other, k) for k in self.structure}
 
     def add(self, key: str, value: str):
-        getattr(self, key).add(value)
+        self[key].add(value)

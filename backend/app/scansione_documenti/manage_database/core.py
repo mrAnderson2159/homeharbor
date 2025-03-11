@@ -7,11 +7,9 @@ from sqlalchemy import select
 
 from app.database import SessionLocal
 from app.scansione_documenti import models
-from app.scansione_documenti.manage_database.constants import EXCLUDED, ADMINISTRATION_PATH
+from app.scansione_documenti.manage_database.constants import EXCLUDED, ADMINISTRATION_PATH, MODELS_USING_INTEGER_NAME
 from app.scansione_documenti.manage_database.tree import DB_Tree
-from app.scansione_documenti.manage_database.utils import camel_to_snake, get_or_create, remove, sliced_admin
-
-db = SessionLocal()
+from app.scansione_documenti.manage_database.utils import camel_to_snake, get_or_create, remove, sliced_admin, db
 
 
 def db_init():
@@ -58,7 +56,10 @@ def get_real_tree(path: Union[str, PathLike]) -> DB_Tree:
     excluded = get_excluded_paths()
     real_tree = DB_Tree()
 
+    # print(f"Looking for {path} and is {path.exists()} that it exists")
+
     for dirpath, _, _ in walk(path):
+        # print(dirpath)
         if pathlib.Path(dirpath).name in excluded:
             continue
 
@@ -66,9 +67,11 @@ def get_real_tree(path: Union[str, PathLike]) -> DB_Tree:
         level = len(parts)
         name = pathlib.Path(dirpath).name
 
+        # print(f"📁 {level=}, {name=}, {parts=}")
+
         if 1 <= level <= 5:
             real_tree.add(DB_Tree.structure[level - 1], name)
-
+            # print(f"🌳 {real_tree}, DB_Tree.structure[level - 1] = {DB_Tree.structure[level - 1]}")
     return real_tree
 
 
@@ -89,6 +92,9 @@ def get_db_tree(needed_models: dict[str, ...]) -> DB_Tree:
         statement = select(model.name)
         query = db.execute(statement).scalars().all()
 
+        if model in MODELS_USING_INTEGER_NAME:
+            query = [str(name) for name in query]
+
         for name in query:
             db_tree.add(model_name, name)
 
@@ -100,11 +106,16 @@ def sync_db(path: Union[str, PathLike] = ADMINISTRATION_PATH):
     Aggiorna il database con le cartelle presenti nel filesystem.
     """
     real_tree = get_real_tree(path)
+    # print(f"🌳 Real tree:\n{real_tree}")
     needed_models = get_needed_models()
+    # print(f"🏗️ Needed models:\n{needed_models}")
     db_tree = get_db_tree(needed_models)
+    # print(f"🏢 DB tree:\n{db_tree}")
 
     to_add = real_tree - db_tree
     to_remove = db_tree - real_tree
+    # print(f"🌱 To add:\n{to_add}")
+    # print(f"🔥 To remove:\n{to_remove}")
 
 
     for key, values in to_add.items():
