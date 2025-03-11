@@ -1,2 +1,2 @@
-CREATE SCHEMA IF NOT EXISTS scansione_documenti;
-SET search_path TO scansione_documenti;
+CREATE SCHEMA IF NOT EXISTS paperless;
+SET search_path TO paperless;

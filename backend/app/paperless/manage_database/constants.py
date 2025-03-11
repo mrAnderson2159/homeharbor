@@ -1,4 +1,4 @@
-# backend/app/scansione_documenti/manage_database/constants.py
+# backend/app/paperless/manage_database/constants.py
 
 """
 Costanti globali per il modulo di gestione del database.
@@ -17,7 +17,7 @@ from os import PathLike
 from typing import Union
 from pathlib import Path
 
-from app.scansione_documenti.models import Year
+from app.paperless.models import Year
 
 
 def _root_path() -> Path:

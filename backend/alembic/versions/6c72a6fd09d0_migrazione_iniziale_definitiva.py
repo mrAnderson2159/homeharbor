@@ -26,63 +26,63 @@ def upgrade() -> None:
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    schema='scansione_documenti'
+    schema='paperless'
     )
-    op.create_index(op.f('ix_scansione_documenti_categories_name'), 'categories', ['name'], unique=True, schema='scansione_documenti')
+    op.create_index(op.f('ix_scansione_documenti_categories_name'), 'categories', ['name'], unique=True, schema='paperless')
     op.create_table('document_types',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    schema='scansione_documenti'
+    schema='paperless'
     )
-    op.create_index(op.f('ix_scansione_documenti_document_types_name'), 'document_types', ['name'], unique=True, schema='scansione_documenti')
+    op.create_index(op.f('ix_scansione_documenti_document_types_name'), 'document_types', ['name'], unique=True, schema='paperless')
     op.create_table('documents',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    schema='scansione_documenti'
+    schema='paperless'
     )
     op.create_table('excluded_paths',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('path', sa.String(), nullable=False),
     sa.Column('reason', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    schema='scansione_documenti'
+    schema='paperless'
     )
-    op.create_index(op.f('ix_scansione_documenti_excluded_paths_path'), 'excluded_paths', ['path'], unique=True, schema='scansione_documenti')
+    op.create_index(op.f('ix_scansione_documenti_excluded_paths_path'), 'excluded_paths', ['path'], unique=True, schema='paperless')
     op.create_table('tags',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    schema='scansione_documenti'
+    schema='paperless'
     )
-    op.create_index(op.f('ix_scansione_documenti_tags_name'), 'tags', ['name'], unique=True, schema='scansione_documenti')
+    op.create_index(op.f('ix_scansione_documenti_tags_name'), 'tags', ['name'], unique=True, schema='paperless')
     op.create_table('utilities',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    schema='scansione_documenti'
+    schema='paperless'
     )
-    op.create_index(op.f('ix_scansione_documenti_utilities_name'), 'utilities', ['name'], unique=True, schema='scansione_documenti')
+    op.create_index(op.f('ix_scansione_documenti_utilities_name'), 'utilities', ['name'], unique=True, schema='paperless')
     op.create_table('years',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    schema='scansione_documenti'
+    schema='paperless'
     )
-    op.create_index(op.f('ix_scansione_documenti_years_name'), 'years', ['name'], unique=True, schema='scansione_documenti')
+    op.create_index(op.f('ix_scansione_documenti_years_name'), 'years', ['name'], unique=True, schema='paperless')
     op.create_table('document_tags',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('document_id', sa.Integer(), nullable=False),
     sa.Column('tag_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['document_id'], ['scansione_documenti.documents.id'], ),
-    sa.ForeignKeyConstraint(['tag_id'], ['scansione_documenti.tags.id'], ),
+    sa.ForeignKeyConstraint(['document_id'], ['paperless.documents.id'], ),
+    sa.ForeignKeyConstraint(['tag_id'], ['paperless.tags.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('document_id', 'tag_id', name='unique_document_tag'),
-    schema='scansione_documenti'
+    schema='paperless'
     )
     op.create_table('paths',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
@@ -91,14 +91,14 @@ def upgrade() -> None:
     sa.Column('year', sa.Integer(), nullable=False),
     sa.Column('document_type', sa.Integer(), nullable=False),
     sa.Column('document', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['category'], ['scansione_documenti.categories.id'], ),
-    sa.ForeignKeyConstraint(['document'], ['scansione_documenti.documents.id'], ),
-    sa.ForeignKeyConstraint(['document_type'], ['scansione_documenti.document_types.id'], ),
-    sa.ForeignKeyConstraint(['utility'], ['scansione_documenti.utilities.id'], ),
-    sa.ForeignKeyConstraint(['year'], ['scansione_documenti.years.id'], ),
+    sa.ForeignKeyConstraint(['category'], ['paperless.categories.id'], ),
+    sa.ForeignKeyConstraint(['document'], ['paperless.documents.id'], ),
+    sa.ForeignKeyConstraint(['document_type'], ['paperless.document_types.id'], ),
+    sa.ForeignKeyConstraint(['utility'], ['paperless.utilities.id'], ),
+    sa.ForeignKeyConstraint(['year'], ['paperless.years.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('category', 'utility', 'year', 'document_type', 'document', name='unique_path_constraint'),
-    schema='scansione_documenti'
+    schema='paperless'
     )
     # ### end Alembic commands ###
 
@@ -106,19 +106,19 @@ def upgrade() -> None:
 def downgrade() -> None:
     """Downgrade schema."""
     # ### commands auto generated by Alembic - please adjust! ###
-    op.drop_table('paths', schema='scansione_documenti')
-    op.drop_table('document_tags', schema='scansione_documenti')
-    op.drop_index(op.f('ix_scansione_documenti_years_name'), table_name='years', schema='scansione_documenti')
-    op.drop_table('years', schema='scansione_documenti')
-    op.drop_index(op.f('ix_scansione_documenti_utilities_name'), table_name='utilities', schema='scansione_documenti')
-    op.drop_table('utilities', schema='scansione_documenti')
-    op.drop_index(op.f('ix_scansione_documenti_tags_name'), table_name='tags', schema='scansione_documenti')
-    op.drop_table('tags', schema='scansione_documenti')
-    op.drop_index(op.f('ix_scansione_documenti_excluded_paths_path'), table_name='excluded_paths', schema='scansione_documenti')
-    op.drop_table('excluded_paths', schema='scansione_documenti')
-    op.drop_table('documents', schema='scansione_documenti')
-    op.drop_index(op.f('ix_scansione_documenti_document_types_name'), table_name='document_types', schema='scansione_documenti')
-    op.drop_table('document_types', schema='scansione_documenti')
-    op.drop_index(op.f('ix_scansione_documenti_categories_name'), table_name='categories', schema='scansione_documenti')
-    op.drop_table('categories', schema='scansione_documenti')
+    op.drop_table('paths', schema='paperless')
+    op.drop_table('document_tags', schema='paperless')
+    op.drop_index(op.f('ix_scansione_documenti_years_name'), table_name='years', schema='paperless')
+    op.drop_table('years', schema='paperless')
+    op.drop_index(op.f('ix_scansione_documenti_utilities_name'), table_name='utilities', schema='paperless')
+    op.drop_table('utilities', schema='paperless')
+    op.drop_index(op.f('ix_scansione_documenti_tags_name'), table_name='tags', schema='paperless')
+    op.drop_table('tags', schema='paperless')
+    op.drop_index(op.f('ix_scansione_documenti_excluded_paths_path'), table_name='excluded_paths', schema='paperless')
+    op.drop_table('excluded_paths', schema='paperless')
+    op.drop_table('documents', schema='paperless')
+    op.drop_index(op.f('ix_scansione_documenti_document_types_name'), table_name='document_types', schema='paperless')
+    op.drop_table('document_types', schema='paperless')
+    op.drop_index(op.f('ix_scansione_documenti_categories_name'), table_name='categories', schema='paperless')
+    op.drop_table('categories', schema='paperless')
     # ### end Alembic commands ###

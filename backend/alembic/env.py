@@ -3,7 +3,7 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool, MetaData
 from alembic import context
 
-from app.scansione_documenti import models as sd_models # Importa i modelli di scansione_documenti
+from app.paperless import models as sd_models # Importa i modelli di paperless
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

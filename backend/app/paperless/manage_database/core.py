@@ -1,4 +1,4 @@
-# backend/app/scansione_documenti/manage_database/core.py
+# backend/app/paperless/manage_database/core.py
 
 """
 Modulo centrale per la gestione della sincronizzazione tra il file system
@@ -17,11 +17,11 @@ from typing import Union, Literal, Callable
 
 from sqlalchemy import select
 
-from app.scansione_documenti import models
-from app.scansione_documenti.manage_database.constants import EXCLUDED, MOCK_ADMINISTRATION_PATH, \
+from app.paperless import models
+from app.paperless.manage_database.constants import EXCLUDED, MOCK_ADMINISTRATION_PATH, \
     MODELS_USING_INTEGER_NAME
-from app.scansione_documenti.manage_database.tree import DB_Tree
-from app.scansione_documenti.manage_database.utils import camel_to_snake, get_or_create, remove, sliced_admin, db
+from app.paperless.manage_database.tree import DB_Tree
+from app.paperless.manage_database.utils import camel_to_snake, get_or_create, remove, sliced_admin, db
 
 
 def db_init():
