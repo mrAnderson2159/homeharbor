@@ -8,6 +8,7 @@ class DB_Tree:
         self.year = set()
         self.document_type = set()
         self.document = set()
+        self.paths = set()
 
     def __str__(self):
         return (
@@ -15,7 +16,8 @@ class DB_Tree:
             f'utilities: {self.utility}\n'
             f'years: {self.year}\n'
             f'document_types: {self.document_type}\n'
-            f'documents: {self.document}'
+            f'documents: {self.document}\n'
+            f'paths: {self.paths}'
         )
 
     def __repr__(self):
@@ -28,7 +30,15 @@ class DB_Tree:
         return {k: getattr(self, k) for k in self.structure}
 
     def __sub__(self, other):
-        return {k: getattr(self, k) - getattr(other, k) for k in self.structure}
+        keys = [
+            k for k, v in vars(self).items()
+            if isinstance(v, set)
+        ] # valutiamo solo i set dell'oggetto
+        return {k: getattr(self, k) - getattr(other, k) for k in keys}
 
     def add(self, key: str, value: str):
         self[key].add(value)
+
+    @property
+    def sorted_paths(self):
+        return sorted(self.paths)

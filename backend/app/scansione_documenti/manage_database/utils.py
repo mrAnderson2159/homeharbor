@@ -80,14 +80,10 @@ def sliced_admin(t: tuple[str, ...]) -> tuple[str, ...]:
     return t[index + 1:]
 
 
-def camel_to_snake(name: str) -> str:
-    """
-    Converte una stringa CamelCase in snake_case.
-
-    Esempio:
-        CamelCase -> camel_case
-        HTTPResponseCode -> http_response_code
-    """
+def camel_to_snake(name: str, reverse: bool = False, pascal: bool = False) -> str:
+    if reverse:
+        name = re.sub(r'_([a-z])', lambda x: x.group(1).upper(), name)
+        return name.capitalize() if pascal else name
     # Inserisce un underscore tra lettere minuscole e maiuscole o tra lettere maiuscole seguite da minuscole
     name = re.sub(r'(?<!^)(?=[A-Z])', '_', name)
     return name.lower()

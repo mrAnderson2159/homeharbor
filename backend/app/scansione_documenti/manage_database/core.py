@@ -1,7 +1,7 @@
 # backend/app/scansione_documenti/manage_database/core.py
 import pathlib
 from os import PathLike, walk
-from typing import Union
+from typing import Union, Literal, Callable
 
 from sqlalchemy import select
 
@@ -72,6 +72,9 @@ def get_real_tree(path: Union[str, PathLike]) -> DB_Tree:
         if 1 <= level <= 5:
             real_tree.add(DB_Tree.structure[level - 1], name)
             # print(f"🌳 {real_tree}, DB_Tree.structure[level - 1] = {DB_Tree.structure[level - 1]}")
+            if level == 5:
+                real_tree.add('paths', str(pathlib.Path(*parts)))
+
     return real_tree
 
 
@@ -83,6 +86,38 @@ def get_needed_models() -> dict[str, ...]:
         for model in dir(models)
         if camel_to_snake(model) in structure
     }
+
+def get_all_path_labels(return_type: Literal['query', 'PathLike', 'posix']) -> Union[
+    list[tuple[str, str, str, str, str]],
+    list[PathLike],
+    list[str]
+]:
+    stmt = (
+        select(
+            models.Category.name,
+            models.Utility.name,
+            models.Year.name,
+            models.DocumentType.name,
+            models.Document.name
+        )
+        .join(models.Path.category_rel)
+        .join(models.Path.utility_rel)
+        .join(models.Path.year_rel)
+        .join(models.Path.document_type_rel)
+        .join(models.Path.document_rel)
+    )
+
+    result = db.execute(stmt).all()
+
+    match return_type:
+        case 'query':
+            return result
+        case 'PathLike':
+            return [pathlib.Path(*map(str, parts)) for parts in result] # usiamo map(str, parts) per gli anni
+        case 'posix':
+            return [pathlib.Path(*map(str, parts)).as_posix() for parts in result]
+        case _:
+            raise ValueError("Tipo di ritorno non valido. Usa 'query', 'PathLike' o 'posix'.")
 
 
 def get_db_tree(needed_models: dict[str, ...]) -> DB_Tree:
@@ -98,7 +133,42 @@ def get_db_tree(needed_models: dict[str, ...]) -> DB_Tree:
         for name in query:
             db_tree.add(model_name, name)
 
+    db_tree.paths = set(get_all_path_labels('posix'))
+
     return db_tree
+
+
+def process_posix_path(path: str) -> dict[str, str]:
+    parts = pathlib.PurePosixPath(path).parts
+
+    return {
+        'category': parts[0],
+        'utility': parts[1],
+        'year': parts[2],
+        'document_type': parts[3],
+        'document': parts[4]
+    }
+
+def get_id_from_name(model: str, name: str) -> int:
+    model_name = {
+        'category': 'Category',
+        'utility': 'Utility',
+        'year': 'Year',
+        'document_type': 'DocumentType',
+        'document': 'Document'
+    }[model]
+
+    model = getattr(models, model_name)
+
+    statement = select(model.id).where(model.name == name)
+    return db.execute(statement).scalar()
+
+def crud_path(path: str, function: Callable):
+    kwargs = process_posix_path(path)
+    filter_key = ', '.join(kwargs.keys())
+    ids = {key: get_id_from_name(key, value) for key, value in kwargs.items()}
+
+    return function(model=models.Path, filter_key=filter_key, **ids)
 
 
 def sync_db(path: Union[str, PathLike] = ADMINISTRATION_PATH):
@@ -117,13 +187,18 @@ def sync_db(path: Union[str, PathLike] = ADMINISTRATION_PATH):
     # print(f"🌱 To add:\n{to_add}")
     # print(f"🔥 To remove:\n{to_remove}")
 
-
     for key, values in to_add.items():
         for value in values:
-            get_or_create(model=needed_models[key], filter_key='name', name=value)
+            if key == 'paths':
+                crud_path(value, get_or_create)
+            else:
+                get_or_create(model=needed_models[key], filter_key='name', name=value)
 
     for key, values in to_remove.items():
         for value in values:
-            remove(model=needed_models[key], filter_key='name', name=value)
+            if key == 'paths':
+                crud_path(value, remove)
+            else:
+                remove(model=needed_models[key], filter_key='name', name=value)
 
     db.commit()
