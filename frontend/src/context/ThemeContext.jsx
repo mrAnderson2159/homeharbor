@@ -30,7 +30,7 @@ const ThemeContext = createContext();
  */
 export const ThemeProvider = ({ children }) => {
     // Stato locale per il tema, inizialmente dark (fallback)
-    const [theme, setTheme] = useState("dark");
+    const [theme, setTheme] = useState("");
 
     /**
      * Effetto eseguito una sola volta all'avvio.

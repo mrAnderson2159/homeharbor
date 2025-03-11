@@ -1,0 +1,14 @@
+// frontend/src/styles/light.scss
+
+[data-theme="light"] {
+    // 🎨 Token personalizzati
+    --bg: #fdfdfd;
+    --text: #1c1c1e;
+    --accent: #007aff;
+    --card-bg: #ffffff;
+    --border-color: #dcdcdc;
+
+    // 🪄 Override variabili Bootstrap
+    --bs-body-bg: var(--bg);
+    --bs-body-color: var(--text);
+}

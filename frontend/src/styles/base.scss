@@ -1,0 +1,18 @@
+body {
+    --bs-body-bg: var(--bg);
+    --bs-body-color: var(--text);
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-family: system-ui, sans-serif;
+    margin: 0;
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
