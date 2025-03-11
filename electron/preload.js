@@ -1,5 +1,6 @@
-const { contextBridge } = require("electron");
+const { contextBridge, ipcRenderer } = require("electron");
 
-contextBridge.exposeInMainWorld("electronAPI", {
-    sendMessage: (message) => console.log("Messaggio ricevuto:", message),
+contextBridge.exposeInMainWorld("settings", {
+    get: (key) => ipcRenderer.invoke("settings:get", key),
+    set: (key, value) => ipcRenderer.invoke("settings:set", key),
 });

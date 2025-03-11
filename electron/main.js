@@ -1,10 +1,9 @@
 // electron/main.js
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const { exec, spawn } = require("child_process");
-const path = require("path");
 const { log } = require("console");
-const { stat } = require("fs");
-const axios = require("axios");
+const path = require("path");
+const settings = require("./settings");
 
 const CONSTANTS = {
     DATABASE_PORT: 15432,
@@ -350,4 +349,13 @@ app.whenReady().then(async () => {
 app.on("window-all-closed", async () => {
     console.log("🛑 Tutte le finestre sono state chiuse...");
     await quit();
+});
+
+/* ---------------------------------- IPC ---------------------------------- */
+ipcMain.handle("settings:get", (event, key) => {
+    return settings.get(key);
+});
+
+ipcMain.handle("settings:set", (event, key, value) => {
+    settings.set(key, value);
 });
