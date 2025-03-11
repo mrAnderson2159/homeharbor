@@ -1,4 +1,14 @@
 # backend/app/scansione_documenti/models.py
+
+"""
+Definizione dei modelli SQLAlchemy per il modulo di gestione documenti.
+
+Questi modelli rappresentano la struttura relazionale del database
+all'interno dello schema `scansione_documenti`, che mappa le directory
+e i documenti scansionati, insieme ai metadati e alle entità correlate.
+"""
+
+
 from sqlalchemy import Column, Integer, String, UniqueConstraint
 from sqlalchemy import ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship
@@ -6,6 +16,16 @@ from app.database import Base
 
 
 class Category(Base):
+    """
+    Rappresenta una categoria di documenti (es. 'Salute', 'Banca', ecc.).
+
+    Attributi:
+        id (int): Chiave primaria.
+        name (str): Nome univoco della categoria.
+        description (str): Descrizione opzionale.
+        paths (relazione): Relazione con la tabella `Path`.
+    """
+
     __tablename__ = "categories"
     __table_args__ = {"schema": "scansione_documenti"}  #
 
@@ -17,6 +37,17 @@ class Category(Base):
 
 
 class Utility(Base):
+    """
+    Entità che rappresenta un'utenza, ovvero il mittente o destinatario del documento
+    (es. 'Enel', 'Vodafone', 'Poste', ecc.).
+
+    Attributi:
+        id (int): Chiave primaria.
+        name (str): Nome univoco dell'utenza.
+        description (str): Descrizione opzionale.
+        paths (relazione): Relazione con la tabella `Path`.
+    """
+
     __tablename__ = "utilities"
     __table_args__ = {"schema": "scansione_documenti"}  #
 
@@ -28,6 +59,15 @@ class Utility(Base):
 
 
 class Year(Base):
+    """
+    Rappresenta un anno di riferimento (es. 2022, 2019, ecc.).
+
+    Attributi:
+        id (int): Chiave primaria.
+        name (int): Anno numerico, con vincolo ≥ 2000.
+        paths (relazione): Relazione con la tabella `Path`.
+    """
+
     __tablename__ = "years"
     __table_args__ = {"schema": "scansione_documenti"}  #
 
@@ -40,6 +80,16 @@ class Year(Base):
 
 
 class DocumentType(Base):
+    """
+    Specifica la tipologia del documento (es. 'Pagato', 'Non Pagato', 'Default').
+
+    Attributi:
+        id (int): Chiave primaria.
+        name (str): Tipologia, con vincolo di valori ammessi.
+        description (str): Descrizione opzionale.
+        paths (relazione): Relazione con la tabella `Path`.
+    """
+
     __tablename__ = "document_types"
     __table_args__ = {"schema": "scansione_documenti"}  #
 
@@ -53,6 +103,17 @@ class DocumentType(Base):
 
 
 class Document(Base):
+    """
+    Descrive un documento specifico, come un file o una scansione.
+
+    Attributi:
+        id (int): Chiave primaria.
+        name (str): Nome del documento.
+        description (str): Descrizione opzionale.
+        paths (relazione): Collegamento con i `Path`.
+        tags (relazione): Relazione molti-a-molti con i `Tag`.
+    """
+
     __tablename__ = "documents"
     __table_args__ = {"schema": "scansione_documenti"}
 
@@ -69,6 +130,18 @@ class Document(Base):
 
 
 class Path(Base):
+    """
+    Rappresenta un percorso completo nel filesystem, come relazione tra:
+    Categoria → Utenza → Anno → Tipo Documento → Documento.
+
+    Vincolo di unicità su tutte le colonne.
+
+    Attributi:
+        id (int): Chiave primaria.
+        category, utility, year, document_type, document (int): Chiavi esterne.
+        category_rel, utility_rel, year_rel, document_type_rel, document_rel: relazioni inverse.
+    """
+
     __tablename__ = "paths"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -92,6 +165,15 @@ class Path(Base):
 
 
 class Tag(Base):
+    """
+    Tag semantici assegnabili ai documenti.
+
+    Attributi:
+        id (int): Chiave primaria.
+        name (str): Nome univoco del tag.
+        documents (relazione): Documenti associati.
+    """
+
     __tablename__ = "tags"
     __table_args__ = {"schema": "scansione_documenti"}
 
@@ -106,6 +188,15 @@ class Tag(Base):
 
 
 class DocumentTag(Base):
+    """
+    Tabella ponte per la relazione molti-a-molti tra `Document` e `Tag`.
+
+    Attributi:
+        id (int): Chiave primaria.
+        document_id (int): FK verso `documents`.
+        tag_id (int): FK verso `tags`.
+    """
+
     __tablename__ = "document_tags"
     __table_args__ = (
         UniqueConstraint("document_id", "tag_id", name="unique_document_tag"),
@@ -118,6 +209,15 @@ class DocumentTag(Base):
 
 
 class ExcludedPath(Base):
+    """
+    Elenco di cartelle da escludere dalla scansione.
+
+    Attributi:
+        id (int): Chiave primaria.
+        path (str): Nome della cartella esclusa.
+        reason (str): Motivazione opzionale.
+    """
+
     __tablename__ = "excluded_paths"
     __table_args__ = {"schema": "scansione_documenti"}
 

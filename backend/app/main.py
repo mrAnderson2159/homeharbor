@@ -1,41 +1,28 @@
 # backend/app/main.py
-import logging
+
+"""
+Punto di ingresso principale per l'app FastAPI.
+
+- Configura logging colorato in modalità sviluppo.
+- Imposta il middleware CORS.
+- Blocca le richieste HTTP con origin non autorizzato.
+- Espone la rotta di test '/'.
+"""
+
+from app.logger import configure_logging, logger
 from fastapi import FastAPI, Request, HTTPException
 from app.config import DEBUG_MODE, DATABASE_NAME, FRONTEND_ADDRESS
 from fastapi.middleware.cors import CORSMiddleware
 
+configure_logging(DEBUG_MODE)
 
-# Definisce i colori per ciascuna parte del messaggio
-RESET = "\x1b[0m"
-GREY = "\x1b[38;21m"
-GREEN = "\x1b[32m"
-YELLOW = "\x1b[33m"
-RED = "\x1b[31m"
-BOLD_RED = "\x1b[31;1m"
-MAGENTA = "\x1b[35m"
-CYAN = "\x1b[36m"
-
-# Definisce il formato del log, aggiungendo colori a ciascuna sezione
-log_format = (
-    f"{CYAN}FastAPI: {RESET}"
-    f"{CYAN}%(asctime)s{RESET} - "
-    f"{MAGENTA}%(name)s{RESET} - "
-    f"{GREEN}%(levelname)s{RESET} - "
-    f"{YELLOW}%(message)s{RESET}"
-)
-print()
-
-if DEBUG_MODE:
-    # Configura il logging con il formatter colorato
-    logging.basicConfig(
-        level=logging.INFO,  # Livello di logging impostato a INFO
-        format=log_format,  # Formato del log
-    )
-
-logger = logging.getLogger(__name__)
 logger.info("Server starting...")
 
 app = FastAPI()
+
+logger.info("Server started.")
+logger.info(f"Modalità debug: {DEBUG_MODE}")
+logger.info(f"Database: {DATABASE_NAME}")
 
 # Lista dei frontend consentiti (inizialmente vuota)
 allowed_origins = [FRONTEND_ADDRESS]
@@ -48,7 +35,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-logger.info(f"CORS abilitato per gli indirizzi: {allowed_origins}{RESET}")
+logger.info(f"CORS abilitato per gli indirizzi: {allowed_origins}")
 
 @app.middleware("http")
 async def block_unauthorized_requests(request: Request, call_next):
