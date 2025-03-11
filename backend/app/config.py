@@ -28,6 +28,18 @@ def get_db_name():
     return os.getenv("DATABASE", "homeharbor")
 
 
+def get_db_port():
+    """
+    Restituisce la porta del database da utilizzare
+
+    Legge la variabile d'ambiente DATABASE_PORT, con fallback su '15432'.
+
+    Returns:
+        str: porta del database.
+    """
+    return os.getenv("DATABASE_PORT", "15432")
+
+
 def get_cors_origins():
     """
     Recupera l'indirizzo del frontend per l'header CORS.
@@ -43,4 +55,5 @@ def get_cors_origins():
 # Costanti globali utilizzabili in tutta l'app
 DEBUG_MODE = get_debug_mode()
 DATABASE_NAME = get_db_name()
+DATABASE_PORT = get_db_port()
 FRONTEND_ADDRESS = get_cors_origins()

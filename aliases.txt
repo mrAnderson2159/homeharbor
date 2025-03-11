@@ -1,8 +1,0 @@
-alias get="curl"
-alias post="curl -X POST"
-
-# HOMEHARBOR
-alias homeharbor-venv='cd ~/homeharbor/backend; [ -d venv ] || python3 -m venv venv; source venv/bin/activate;'
-alias homeharbor-migrate='function _homeharbor_migrate() { homeharbor-venv; alembic -c alembic.ini revision --autogenerate -m "$1" && alembic -c alembic.ini upgrade head; }; _homeharbor_migrate'
-alias homeharbor-psql='psql -d homeharbor --port=15432'
-
