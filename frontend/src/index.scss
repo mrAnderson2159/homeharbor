@@ -1,3 +1,6 @@
+/* frontend/src/index.scss */
+@import "styles/tokens.scss";
+
 :root {
     font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
@@ -7,10 +10,26 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    --transition-fast: #{$transition-fast};
+    --transition-slow: #{$transition-slow};
+}
+
+#root {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 body {
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
+}
+
+main#main {
+    height: $main-height;
+    overflow-y: auto;
+    overflow-x: hidden;
 }

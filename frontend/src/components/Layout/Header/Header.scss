@@ -1,7 +1,9 @@
+@import "../../../styles/tokens.scss";
+
 .hh-header {
     // background-color: var(--card-bg);
     border-bottom: 1px solid var(--border-color);
-    height: 60px;
+    height: $header-height;
 
     .hh-title {
         font-size: 1.5rem;

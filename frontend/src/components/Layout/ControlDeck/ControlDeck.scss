@@ -1,0 +1,37 @@
+/* frontend/src/components/Layout/ControlDeck/ControlDeck.scss */
+@import "../../../styles/tokens.scss";
+
+.control-deck {
+    height: 100%;
+    width: 60px;
+    border-right: 1px solid var(--border-color);
+    padding-left: 2px;
+
+    &__button-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__button-container:hover {
+        cursor: pointer;
+    }
+
+    &__button {
+        background-color: transparent;
+        border: none;
+        color: var(--text);
+        font-size: 1.5rem;
+        border-left: 2px solid transparent;
+        padding: 10px 0;
+        transition: color var(--transition-fast),
+            border-left var(--transition-fast);
+    }
+
+    &__button:not(.active):hover {
+        color: var(--accent);
+    }
+
+    &__button.active {
+        border-left: 2px solid var(--accent);
+    }
+}

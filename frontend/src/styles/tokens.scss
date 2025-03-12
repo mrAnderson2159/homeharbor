@@ -1,13 +1,33 @@
-// src/styles/tokens.scss
+// 🎨 Color Tokens
+$color-bg-dark: #131215;
+$color-bg-card: #1e1e1e;
+$color-text: #e5e5e5;
+$color-accent: #ffcc00;
+$color-border: #333333;
 
-$transition-fast: 0.2s ease;
-$transition-slow: 0.4s ease;
+// 📐 Spacing & Radius
 $radius: 8px;
+$gap-sm: 0.5rem;
+$gap-md: 1rem;
+$gap-lg: 2rem;
+
+// 🌀 Transitions
+$transition-fast: 0.2s ease;
+$transition-medium: 0.3s ease;
+$transition-slow: 0.4s ease;
+$transition-default: $transition-medium;
+
+// 🖼️ Shadows
+$shadow-light: 0 2px 6px rgba(0, 0, 0, 0.06);
 $shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
-// Flex utility classes: flex-1 to flex-11
+// 🔢 Flex utility classes: flex-1 to flex-11
 @for $i from 1 through 11 {
     .flex-#{$i} {
         flex: #{$i};
     }
 }
+
+// 📏 Layout heights
+$header-height: 10%;
+$main-height: 90%;

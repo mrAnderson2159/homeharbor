@@ -1,1 +1,0 @@
-import './SectionCard.scss'

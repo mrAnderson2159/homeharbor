@@ -1,0 +1,44 @@
+/* frontend/src/components/SectionCard/SectionCard.scss */
+@import "../../../../styles/tokens.scss";
+
+.section-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    transition: background-color $transition-fast;
+    height: 100%; // per riempire tutta la colonna
+    border: 1px solid transparent;
+
+    &:hover {
+        text-decoration: none;
+        background-color: rgba(255, 255, 255, 0.03);
+        transform: scale(1.015);
+        transition: all 0.2s ease;
+    }
+
+    &__icon {
+        font-size: 2.2rem;
+        margin-bottom: 0.75rem;
+
+        img {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    &__title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    &__description {
+        font-size: 0.95rem;
+        color: #ccc;
+        margin: 0;
+    }
+}

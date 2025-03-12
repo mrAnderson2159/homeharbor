@@ -1,7 +1,7 @@
 // frontend/src/components/Header/Header.jsx
 import "./Header.scss";
 import { Link } from "react-router-dom";
-import logo from "../../assets/logo.png";
+import logo from "../../../assets/logo.png";
 
 export default function Header() {
     return (
