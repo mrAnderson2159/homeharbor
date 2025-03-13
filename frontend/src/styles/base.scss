@@ -17,3 +17,29 @@ a {
         text-decoration: underline;
     }
 }
+
+// Tooltip Bootstrap – stile base e personalizzato
+
+.tooltip {
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.4;
+    pointer-events: none; // evita glitch durante hover rapido
+    z-index: 1080;
+
+    // Colori presi dalle variabili tema
+    --bs-tooltip-bg: var(--card-bg);
+    --bs-tooltip-color: #fff;
+
+    // Transizione morbida
+    // transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.tooltip.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+// .tooltip[data-popper-placement^="right"] {
+//     transform: translateX(4px);
+// }

@@ -7,6 +7,7 @@ export default function ControlDeck({
     iconType,
     clickHandler,
     activeTab,
+    tooltipText,
     ...props
 }) {
     // TYPE: data = [{icon, tab}, ...]
@@ -22,6 +23,9 @@ export default function ControlDeck({
                                 tab === activeTab ? "active" : ""
                             }`}
                             onClick={() => clickHandler(tab)}
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="right"
+                            title={tooltipText(tab)}
                         >
                             <Icon icon={icon} type={iconType} />
                         </button>

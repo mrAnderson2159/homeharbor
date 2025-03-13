@@ -1,3 +1,4 @@
+// frontend/src/pages/Paperless/Paperless.jsx
 import "./Paperless.scss";
 import { useState } from "react";
 import PageContainer from "../../components/Layout/PageContainer";
@@ -13,6 +14,16 @@ const components = {
     search: SearchWindow,
     upload: UploadWindow,
 };
+
+function tooltipText(tab) {
+    const map = {
+        scanner: "Scannerizza documenti",
+        manager: "Gestione documenti",
+        search: "Cerca tra i documenti",
+        upload: "Carica nuovi documenti",
+    };
+    return map[tab] ?? "";
+}
 
 export default function Paperless() {
     const [activeTab, setActiveTab] = useState("scanner");
@@ -32,6 +43,7 @@ export default function Paperless() {
                 data={controlDeckData}
                 clickHandler={setActiveTab}
                 activeTab={activeTab}
+                tooltipText={tooltipText}
             />
             <div className="paperless__window">
                 <ActiveWindow />

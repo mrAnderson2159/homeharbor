@@ -119,6 +119,7 @@ class Document(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
+    pages = Column(Integer)
     description = Column(String)
 
     paths = relationship("Path", back_populates="document_rel")
