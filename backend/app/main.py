@@ -13,12 +13,19 @@ from app.logger import configure_logging, logger
 from fastapi import FastAPI, Request, HTTPException
 from app.config import DEBUG_MODE, DATABASE_NAME, FRONTEND_ADDRESS
 from fastapi.middleware.cors import CORSMiddleware
+from app.api import api_router
 
 configure_logging(DEBUG_MODE)
 
 logger.info("Server starting...")
 
-app = FastAPI()
+app = FastAPI(
+    title="HomeHarbor API",
+    version="1.0.0",
+    description="API per gestione domestica",
+    docs_url="/docs",  # puoi personalizzare anche questo
+    redoc_url="/redoc"
+)
 
 logger.info("Server started.")
 logger.info(f"Modalità debug: {DEBUG_MODE}")
@@ -37,6 +44,10 @@ app.add_middleware(
 
 logger.info(f"CORS abilitato per gli indirizzi: {allowed_origins}")
 
+
+app.include_router(api_router)
+
+
 @app.middleware("http")
 async def block_unauthorized_requests(request: Request, call_next):
     # logger.info(f"Richiesta in arrivo: {request.client}")
@@ -50,3 +61,11 @@ async def block_unauthorized_requests(request: Request, call_next):
 def read_root():
     return {"message": "FastAPI è attivo!"}
 
+
+@app.get("/health")
+def health_check():
+    return {
+        "status": "ok",
+        "debug_mode": DEBUG_MODE,
+        "db": DATABASE_NAME
+    }

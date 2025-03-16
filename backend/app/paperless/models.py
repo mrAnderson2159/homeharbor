@@ -225,3 +225,31 @@ class ExcludedPath(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     path = Column(String, nullable=False, unique=True, index=True)
     reason = Column(String)
+
+
+# backend/app/paperless/models.py
+
+class PendingScan(Base):
+    """
+    Rappresenta una voce creata ma non ancora scannerizzata.
+
+    Usato per prevenire la perdita di dati in caso di crash o chiusura dell'app.
+
+    Attributi:
+        id (int): Chiave primaria.
+        category (str)
+        utility (str)
+        year (int)
+        document_type (str)
+        document (str)
+    """
+
+    __tablename__ = "pending_scans"
+    __table_args__ = {"schema": "paperless"}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    category = Column(String, nullable=False)
+    utility = Column(String, nullable=False)
+    year = Column(Integer, nullable=False)
+    document_type = Column(String, nullable=False)
+    document = Column(String, nullable=False)

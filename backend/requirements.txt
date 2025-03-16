@@ -1,6 +1,7 @@
 fastapi
 uvicorn
 psycopg2
+pydantic
 sqlalchemy
 alembic
 pytest

@@ -1,3 +1,4 @@
+# backend/scanner/scanner_control/main.py
 from backend.scanner_control.automation import click_scan_button
 
 def main():

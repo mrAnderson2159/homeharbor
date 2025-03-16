@@ -19,7 +19,6 @@ from app.database import SessionLocal
 
 db = SessionLocal()
 
-
 def crud(function):
     """
     Decoratore per operazioni CRUD che intercetta e gestisce la ricerca

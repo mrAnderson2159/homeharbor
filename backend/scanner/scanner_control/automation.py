@@ -1,3 +1,4 @@
+# backend/scanner/scanner_control/automation.py
 import time
 import pyautogui
 from backend.scanner_control.applescript import bring_hp_smart_to_front, get_window_geometry
