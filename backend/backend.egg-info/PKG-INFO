@@ -1,0 +1,22 @@
+Metadata-Version: 2.2
+Name: backend
+Version: 1.0.0
+Summary: Backend di HomeHarbor - FastAPI + database + automazioni scanner
+Author-email: Valerio <valerio@example.com>
+License: MIT
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: sqlalchemy
+Requires-Dist: alembic
+Requires-Dist: pydantic
+Requires-Dist: psycopg2
+Requires-Dist: pyautogui
+Requires-Dist: opencv-python
+Requires-Dist: numpy
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: black; extra == "dev"
+Requires-Dist: isort; extra == "dev"
+Requires-Dist: mypy; extra == "dev"

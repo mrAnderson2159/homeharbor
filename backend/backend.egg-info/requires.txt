@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+sqlalchemy
+alembic
+pydantic
+psycopg2
+pyautogui
+opencv-python
+numpy
+
+[dev]
+pytest
+black
+isort
+mypy

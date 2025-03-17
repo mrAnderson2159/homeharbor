@@ -1,14 +1,6 @@
 import sys
 from setuptools import setup, find_packages
 
-# Dipendenze comuni
-common_requirements = [
-    "numpy",
-    "pillow",
-    "opencv-python",
-    "pyautogui"
-]
-
 # Dipendenze specifiche per OS
 extra_requirements = {
     "win32": ["pyinsane2"],  # Windows
@@ -28,7 +20,7 @@ else:
     os_specific_requirements = []
 
 # Unisce dipendenze comuni e specifiche
-install_requires = common_requirements + os_specific_requirements
+install_requires = os_specific_requirements
 
 setup(
     name="homeharbor",
