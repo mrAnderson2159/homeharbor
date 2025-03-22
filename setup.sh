@@ -110,4 +110,95 @@ if [[ "$OS" == "macOS" || "$OS" == "Linux" ]]; then
 fi
 
 
-echo "✅ Parte 1 completata: ambienti e scanner pronti"
+# 9️⃣ Installazione database PostgreSQL
+if [ ! -d database ]; then
+    echo "🗃️  Creazione cartella database/"
+    mkdir database
+fi
+
+if [ ! -f database/PG_VERSION ]; then
+    echo "🔧 Inizializzazione del cluster PostgreSQL..."
+    initdb -D database &> "$NULL_DEVICE"
+    echo "✅ Cluster creato in database/"
+else
+    echo "✅ Cluster PostgreSQL già inizializzato"
+fi
+
+# 1️⃣0️⃣ Avvio server PostgreSQL
+echo "🚀 Verifica avvio PostgreSQL su porta 15432..."
+pg_isready -p 15432 &> "$NULL_DEVICE"
+if [ $? -ne 0 ]; then
+    pg_ctl -D database -l database/logfile start -o "-p 15432"
+    echo "✅ PostgreSQL avviato su porta 15432"
+else
+    echo "✅ PostgreSQL già attivo su porta 15432"
+fi
+
+# 1️⃣1️⃣ Verifica presenza database homeharbor
+echo "🔍 Verifica esistenza del database 'homeharbor'..."
+if ! psql -p 15432 -lqt | cut -d \| -f 1 | grep -qw homeharbor; then
+    createdb -p 15432 homeharbor
+    echo "✅ Database 'homeharbor' creato"
+else
+    echo "✅ Database 'homeharbor' già esistente"
+fi
+
+# 1️⃣2️⃣ Verifica presenza role postgres
+echo "👤 Verifica esistenza ruolo 'postgres'..."
+if ! psql -p 15432 -d postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='postgres'" | grep -q 1; then
+    createuser -p 15432 -s postgres 
+    echo "✅ Ruolo 'postgres' creato"
+else
+    echo "✅ Ruolo 'postgres' già esistente"
+fi
+
+# 1️⃣3️⃣ Verifica presenza migrazioni
+echo "🔍 Verifica presenza migrazioni Alembic..."
+MIGRATIONS_DIR="backend/alembic/versions"
+
+if [ ! -d "$MIGRATIONS_DIR" ]; then
+    echo "📁 Cartella delle migrazioni mancante. La creo..."
+    mkdir -p "$MIGRATIONS_DIR"
+fi
+
+if [ -z "$(ls -A "$MIGRATIONS_DIR")" ]; then
+    echo "🆕 Nessuna migrazione trovata. Creo la migrazione iniziale..."
+    ALEMBIC_SCHEMA=paperless alembic -c backend/alembic.ini revision --autogenerate -m "init"
+    
+    # Se il file generato è vuoto (solo 'pass'), rimuoviamolo
+    latest=$(ls -t "$MIGRATIONS_DIR" | head -n1)
+    if grep -q "pass" "$MIGRATIONS_DIR/$latest"; then
+        echo "⚠️  Migrazione vuota. La rimuovo: $latest"
+        rm "$MIGRATIONS_DIR/$latest"
+    else
+        echo "✅ Migrazione iniziale creata"
+    fi
+else
+    echo "✅ Migrazioni già presenti"
+fi
+
+# 1️⃣4️⃣ Aggiunta degli alias personalizzati (solo su Zsh e sistemi Unix-like)
+ALIAS_FILE="aliases.zsh"
+ZSHENV="$HOME/.zshenv"
+
+if [[ "$OS" == "macOS" || "$OS" == "Linux" ]]; then
+    if [ -f "$ALIAS_FILE" ]; then
+        if ! grep -q "source $(pwd)/$ALIAS_FILE" "$ZSHENV"; then
+            echo "🔗 Aggiungo gli alias HomeHarbor a $ZSHENV..."
+            echo "" >> "$ZSHENV"
+            echo "# Alias per HomeHarbor" >> "$ZSHENV"
+            echo "source $(pwd)/$ALIAS_FILE" >> "$ZSHENV"
+            echo "✅ Alias aggiunti! Esegui 'source $ZSHENV' o riavvia il terminale."
+        else
+            echo "✅ Alias HomeHarbor già presenti in $ZSHENV"
+        fi
+    else
+        echo "⚠️  File degli alias ($ALIAS_FILE) non trovato. Alias non installati."
+    fi
+else
+    echo "🚫 Alias non installati: sistema non compatibile (solo macOS/Linux + Zsh)"
+fi
+
+# 1️⃣5️⃣ Popolamento iniziale del database
+echo "🌱 Popolamento iniziale del database..."
+(cd backend && python -m app.paperless.manage_database)
