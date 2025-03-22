@@ -9,6 +9,7 @@ backend/build/
 backend/dist/
 backend/homeharbor.egg-info/
 __pycache__/
+backend/alembic/versions/
 
 # 🗄️ Database (PostgreSQL)
 database/*.log

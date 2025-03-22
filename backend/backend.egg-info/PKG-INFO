@@ -1,4 +1,4 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: backend
 Version: 1.0.0
 Summary: Backend di HomeHarbor - FastAPI + database + automazioni scanner
